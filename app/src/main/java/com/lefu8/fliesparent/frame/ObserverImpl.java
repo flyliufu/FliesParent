@@ -1,7 +1,6 @@
 package com.lefu8.fliesparent.frame;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.lefu8.flies.response.SimpleObserver;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
