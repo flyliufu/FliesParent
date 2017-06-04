@@ -12,9 +12,17 @@
       android:layout_width="wrap_content"
       android:layout_height="50dp"
       android:background="#fff"
+      android:gravity="center_vertical"
+      android:textSize="18sp"
       />
   <Button
       android:id="@+id/btn_request_object"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="请求"
+      />
+  <Button
+      android:id="@+id/btn_request_list"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="请求"

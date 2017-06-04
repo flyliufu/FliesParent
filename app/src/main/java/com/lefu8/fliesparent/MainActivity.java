@@ -9,6 +9,7 @@ import com.lefu8.fliesparent.bean.UserBean;
 import com.lefu8.fliesparent.frame.JSONEntity;
 import com.lefu8.fliesparent.frame.ObserverImpl;
 import com.lefu8.fliesparent.model.UserModel;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,6 +25,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
       };
   private TextView mTvName;
+  private ObserverImpl<JSONEntity<ArrayList<UserBean>>> mGetUserListObserver =
+      new ObserverImpl<JSONEntity<ArrayList<UserBean>>>() {
+        @Override public void onError(Throwable e) {
+          mTvName.setText(e.getMessage());
+        }
+
+        @Override protected void onParse(JSONEntity<ArrayList<UserBean>> entity) {
+          mTvName.setText("一共有：" + entity.getObject().size() + "位用户。");
+        }
+      };
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -34,11 +45,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
   private void initView() {
     findViewById(R.id.btn_request_object).setOnClickListener(this);
+    findViewById(R.id.btn_request_list).setOnClickListener(this);
     mTvName = (TextView) findViewById(R.id.tv_user_name);
   }
 
   @Override public void onClick(View v) {
     switch (v.getId()) {
+      case R.id.btn_request_list:
+        mUserModel.getUserList(mGetUserListObserver);
+        break;
       case R.id.btn_request_object:
         mUserModel.getUser(mGetUserObserver);
         break;
