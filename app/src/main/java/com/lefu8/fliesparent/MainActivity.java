@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.lefu8.flies.response.SimpleObserver;
 import com.lefu8.fliesparent.bean.UserBean;
 import com.lefu8.fliesparent.frame.JSONEntity;
@@ -35,6 +36,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
           mTvName.setText("一共有：" + entity.getObject().size() + "位用户。");
         }
       };
+  private ObserverImpl<JSONEntity<UserBean>> mTimeoutObserver =
+      new ObserverImpl<JSONEntity<UserBean>>() {
+        @Override protected void onParse(JSONEntity<UserBean> entity) {
+          if (!"0000".equals(entity.getCode())) {
+            Toast.makeText(getBaseContext(), entity.getMsg(), Toast.LENGTH_LONG).show();
+          }
+        }
+      };
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -45,12 +54,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
   private void initView() {
     findViewById(R.id.btn_request_object).setOnClickListener(this);
+    findViewById(R.id.btn_request_timeout).setOnClickListener(this);
     findViewById(R.id.btn_request_list).setOnClickListener(this);
     mTvName = (TextView) findViewById(R.id.tv_user_name);
   }
 
   @Override public void onClick(View v) {
     switch (v.getId()) {
+      case R.id.btn_request_timeout:
+        mUserModel.timeout(mTimeoutObserver);
+        break;
       case R.id.btn_request_list:
         mUserModel.getUserList(mGetUserListObserver);
         break;

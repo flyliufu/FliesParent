@@ -30,4 +30,10 @@ public class UserModel extends AppModel {
 
     doGet("json/object.json", null, observer);
   }
+
+
+  public void timeout(ObserverImpl<JSONEntity<UserBean>> observer) {
+
+    doGet("json/timeout.json", null, observer);
+  }
 }
