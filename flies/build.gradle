@@ -50,7 +50,7 @@ ext {
   siteUrl = 'https://github.com/flyliufu/FliesParent'
   gitUrl = 'https://github.com/flyliufu/FliesParent.git'
 
-  libraryVersion = '0.0.4'
+  libraryVersion = '0.0.5'
 
   developerId = 'flyliufu'
   developerName = 'Liu Fu'
