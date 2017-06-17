@@ -10,7 +10,7 @@ import android.util.Log;
 
 public final class LogUtils {
   private static String TAG = "Flies";
-  private static int sLogLevel = 0;
+  private static int sLogLevel = 8;
 
   /**
    * 设置日志级别

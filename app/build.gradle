@@ -20,8 +20,8 @@ android {
 }
 
 dependencies {
-  compile project(":flies")
-  // compile 'com.lefu8.flies:flies:0.0.4'
+  // compile project(":flies")
+   compile 'com.lefu8.flies:flies:0.0.5'
   compile fileTree(dir: 'libs', include: ['*.jar'])
   androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
     exclude group: 'com.android.support', module: 'support-annotations'
