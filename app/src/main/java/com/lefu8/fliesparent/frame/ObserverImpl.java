@@ -10,7 +10,15 @@ import java.lang.reflect.Type;
  */
 public abstract class ObserverImpl<T extends JSONEntity<?>> extends SimpleObserver<T> {
 
-  private Gson gson = new Gson();
+  private Gson gson;
+
+  public ObserverImpl() {
+    gson = new Gson();
+  }
+
+  public ObserverImpl(Gson gson) {
+    this.gson = gson;
+  }
 
   @Override public void onNext(String json) {
     try {

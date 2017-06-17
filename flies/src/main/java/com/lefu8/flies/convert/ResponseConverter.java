@@ -1,5 +1,6 @@
 package com.lefu8.flies.convert;
 
+import com.lefu8.flies.util.LogUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,12 +27,14 @@ final class ResponseConverter implements Converter<ResponseBody, String> {
       }
     } catch (IOException e) {
       e.printStackTrace();
+      LogUtils.e("ResponseConverter.java read line error.", e);
     } finally {
       if (br != null) {
         try {
           br.close();
         } catch (IOException e) {
           e.printStackTrace();
+          LogUtils.w("ResponseConverter.java close BufferedReader error.", e);
         }
       }
     }

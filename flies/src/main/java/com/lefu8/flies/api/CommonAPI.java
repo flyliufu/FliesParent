@@ -23,7 +23,7 @@ public interface CommonAPI {
    *
    * @param path 路径
    * @param params 参数
-   * @return 返回 JSON
+   * @return 服务器返回JSON
    */
   @POST @FormUrlEncoded Observable<String> doPost(@Url String path,
       @HeaderMap Map<String, String> headerMap, @FieldMap Map<String, String> params);
@@ -33,6 +33,7 @@ public interface CommonAPI {
    *
    * @param path 路径
    * @param params 参数
+   * @return 服务器返回JSON
    */
   @GET Observable<String> doGet(@Url String path, @HeaderMap Map<String, String> headerMap,
       @QueryMap Map<String, String> params);
