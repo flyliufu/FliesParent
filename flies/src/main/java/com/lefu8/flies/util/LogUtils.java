@@ -33,56 +33,50 @@ public final class LogUtils {
   }
 
   public static void v(String msg) {
-    if (sLogLevel > Log.VERBOSE) Log.v(TAG, msg);
+    if (sLogLevel <= Log.VERBOSE) Log.v(TAG, msg);
   }
 
   public static void v(String msg, Throwable tr) {
-    if (sLogLevel > Log.VERBOSE) Log.v(TAG, msg, tr);
+    if (sLogLevel <= Log.VERBOSE) Log.v(TAG, msg, tr);
   }
 
   public static void d(String msg) {
-    if (sLogLevel > Log.DEBUG) Log.d(TAG, msg);
+    if (sLogLevel <= Log.DEBUG) Log.d(TAG, msg);
   }
 
   public static void d(String msg, Throwable tr) {
-    if (sLogLevel > Log.DEBUG) Log.d(TAG, msg, tr);
+    if (sLogLevel <= Log.DEBUG) Log.d(TAG, msg, tr);
   }
 
   public static void i(String msg) {
-    if (sLogLevel > Log.INFO) Log.i(TAG, msg);
+    if (sLogLevel <= Log.INFO) Log.i(TAG, msg);
   }
 
   public static void i(String msg, Throwable tr) {
-    if (sLogLevel > Log.INFO) Log.i(TAG, msg, tr);
+    if (sLogLevel <= Log.INFO) Log.i(TAG, msg, tr);
   }
 
   public static void w(String msg) {
-    if (sLogLevel > Log.WARN) Log.w(TAG, msg);
+    if (sLogLevel <= Log.WARN) Log.w(TAG, msg);
   }
 
   public static void w(String msg, Throwable tr) {
-    if (sLogLevel > Log.WARN) Log.w(TAG, msg, tr);
+    if (sLogLevel <= Log.WARN) Log.w(TAG, msg, tr);
   }
 
   public static void e(String msg) {
-    if (sLogLevel > Log.ERROR) Log.e(TAG, msg);
+    if (sLogLevel <= Log.ERROR) Log.e(TAG, msg);
   }
 
   public static void e(String msg, Throwable tr) {
-    if (sLogLevel > Log.ERROR) Log.e(TAG, msg, tr);
+    if (sLogLevel <= Log.ERROR) Log.e(TAG, msg, tr);
   }
 
-  /**
-   * 如发生该类错误不论级别是什么都要输出
-   */
   public static void wtf(String msg) {
-    Log.wtf(TAG, msg);
+    if (sLogLevel <= Log.ASSERT) Log.wtf(TAG, msg);
   }
 
-  /**
-   * 如发生该类错误不论级别是什么都要输出
-   */
   public static void wtf(String msg, Throwable tr) {
-    Log.wtf(TAG, msg, tr);
+    if (sLogLevel <= Log.ASSERT) Log.wtf(TAG, msg, tr);
   }
 }

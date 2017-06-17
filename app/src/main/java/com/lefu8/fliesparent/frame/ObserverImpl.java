@@ -29,12 +29,15 @@ public abstract class ObserverImpl<T extends JSONEntity<?>> extends SimpleObserv
       T unknown = gson.fromJson(json, type);
       // TODO: 2017/6/4 这里可以根据对象判断一此公共的错误
       if (unknown == null) {
-        onError(new Exception("请求返回值为空"));
+        LogUtils.w("Response is null");
+        // 请求返回值为空
+        onError(new Exception("Response is null"));
       } else {
         onParse(unknown);
       }
     } catch (Exception e) {
       onError(e);
+      LogUtils.e("Parse json string error.", e);
     }
   }
 }

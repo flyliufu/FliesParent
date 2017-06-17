@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.lefu8.flies.response.SimpleObserver;
+import com.lefu8.flies.util.LogUtils;
 import com.lefu8.fliesparent.bean.UserBean;
 import com.lefu8.fliesparent.frame.JSONEntity;
 import com.lefu8.fliesparent.frame.ObserverImpl;
@@ -39,7 +40,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
   private ObserverImpl<JSONEntity<UserBean>> mTimeoutObserver =
       new ObserverImpl<JSONEntity<UserBean>>() {
         @Override protected void onParse(JSONEntity<UserBean> entity) {
+          LogUtils.i("Response success");
           if (!"0000".equals(entity.getCode())) {
+            LogUtils.w("Result is failed");
             Toast.makeText(getBaseContext(), entity.getMsg(), Toast.LENGTH_LONG).show();
           }
         }
