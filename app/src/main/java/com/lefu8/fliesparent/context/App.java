@@ -1,8 +1,10 @@
 package com.lefu8.fliesparent.context;
 
 import android.app.Application;
+import android.util.Log;
 import com.lefu8.flies.api.CommonAPI;
 import com.lefu8.flies.convert.ConvertFactory;
+import com.lefu8.flies.util.LogUtils;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -23,6 +25,11 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
  */
 
 public class App extends Application {
+
+  @Override public void onCreate() {
+    super.onCreate();
+    LogUtils.setLevel(Log.ERROR);
+  }
 
   private static Retrofit.Builder retBuilder = new Retrofit.Builder().client(buildOKHTTP())
       .addConverterFactory(new ConvertFactory())

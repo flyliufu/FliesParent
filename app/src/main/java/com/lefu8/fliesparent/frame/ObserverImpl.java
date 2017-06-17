@@ -2,6 +2,7 @@ package com.lefu8.fliesparent.frame;
 
 import com.google.gson.Gson;
 import com.lefu8.flies.response.SimpleObserver;
+import com.lefu8.flies.util.LogUtils;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -21,6 +22,7 @@ public abstract class ObserverImpl<T extends JSONEntity<?>> extends SimpleObserv
   }
 
   @Override public void onNext(String json) {
+    LogUtils.d(json);
     try {
       Type type =
           ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
