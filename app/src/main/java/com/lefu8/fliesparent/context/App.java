@@ -28,6 +28,7 @@ public class App extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
+    LogUtils.setLevel(Log.DEBUG);
   }
 
   private static Retrofit.Builder retBuilder = new Retrofit.Builder().client(buildOKHTTP())

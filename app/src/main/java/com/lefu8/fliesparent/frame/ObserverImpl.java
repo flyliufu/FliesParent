@@ -7,6 +7,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
+ * 请求响应返回公共解析类
+ *
  * @author liufu on 2017/6/4.
  */
 public abstract class ObserverImpl<T extends JSONEntity<?>> extends SimpleObserver<T> {
