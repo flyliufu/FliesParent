@@ -1,14 +1,17 @@
 package com.lefu8.fliesparent.context;
 
 import android.app.Application;
-import android.util.Log;
+import com.alibaba.sdk.android.httpdns.HttpDns;
+import com.alibaba.sdk.android.httpdns.HttpDnsService;
 import com.lefu8.flies.api.CommonAPI;
 import com.lefu8.flies.convert.ConvertFactory;
-import com.lefu8.flies.util.LogUtils;
+import com.lefu8.fliesparent.frame.LefuHttpDNS;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -20,15 +23,41 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 
+
 /**
  * @author liufu on 2017/6/4.
  */
 
 public class App extends Application {
 
+  /** 阿里云 HttpDns **/
+  public static HttpDnsService httpdns;
+  // TODO 替换成在阿里云 自己域名对应的accountID
+  public final static String accountID = "158676";
+  // TODO 配置自己项目用到的域名
+  public static final String leTouDomain = "letou.lefu8.com";
+  public static final String leFuDomain1 = "v.lefu8.com";
+  public static final String leFuDomain2 = "v2.lefu8.com";
+  public static final String leFuDomain3 = "v3.lefu8.com";
+
   @Override public void onCreate() {
     super.onCreate();
     LogUtils.setLevel(Log.DEBUG);
+
+    initHttpDns();
+  }
+
+  /**
+   * 获取httpdns服务
+   */
+  private void initHttpDns() {
+    // 初始化httpdns
+    httpdns = HttpDns.getService(getApplicationContext(), accountID);
+    // 预解析热点域名
+    httpdns.setPreResolveHosts(new ArrayList<>(
+        Arrays.asList(leFuDomain1, leFuDomain2, leFuDomain3, leTouDomain)));
+    // 设置为true后，当出现网络切换时sdk会立即对域名再次进行解析
+    httpdns.setPreResolveAfterNetworkChanged(true);
   }
 
   private static Retrofit.Builder retBuilder = new Retrofit.Builder().client(buildOKHTTP())
@@ -82,7 +111,8 @@ public class App extends Application {
                 return true;
               }
             });
-
+    // 添加aliyun httpdns
+    builder.dns(new LefuHttpDNS());
     return builder.build();
   }
 }
