@@ -1,5 +1,8 @@
 package com.lefu8.fliesparent;
 
+import android.content.Context;
+import android.os.Environment;
+import android.support.v4.os.EnvironmentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,11 +14,26 @@ import com.lefu8.fliesparent.bean.UserBean;
 import com.lefu8.fliesparent.frame.JSONEntity;
 import com.lefu8.fliesparent.frame.ObserverImpl;
 import com.lefu8.fliesparent.model.UserModel;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
   private UserModel mUserModel = new UserModel();
+
+  private ObserverImpl<JSONEntity<String>> mFileUploadObserver =
+      new ObserverImpl<JSONEntity<String>>() {
+        @Override public void onError(Throwable e) {
+          mTvName.setText(e.getMessage());
+        }
+
+        @Override protected void onParse(JSONEntity<String> entity) {
+          mTvName.setText(entity.getMsg());
+        }
+      };
+
   private ObserverImpl<JSONEntity<UserBean>> mGetUserObserver =
       new ObserverImpl<JSONEntity<UserBean>>() {
         @Override public void onError(Throwable e) {
@@ -59,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     findViewById(R.id.btn_request_object).setOnClickListener(this);
     findViewById(R.id.btn_request_timeout).setOnClickListener(this);
     findViewById(R.id.btn_request_list).setOnClickListener(this);
+    findViewById(R.id.btn_request_file_upload).setOnClickListener(this);
     mTvName = (TextView) findViewById(R.id.tv_user_name);
   }
 
@@ -69,6 +88,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         break;
       case R.id.btn_request_list:
         mUserModel.getUserList(mGetUserListObserver);
+        break;
+      case R.id.btn_request_file_upload:
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(dir, "test.jpg");
+        if (file.exists()) {
+          Map<String, String> param = new HashMap<>();
+          param.put("name", "android user");
+          mUserModel.fileUpload(file.getAbsolutePath(), param, mFileUploadObserver);
+        }
         break;
       case R.id.btn_request_object:
         mUserModel.getUser(mGetUserObserver);

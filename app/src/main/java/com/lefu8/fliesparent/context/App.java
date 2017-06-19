@@ -1,10 +1,12 @@
 package com.lefu8.fliesparent.context;
 
 import android.app.Application;
+import android.util.Log;
 import com.alibaba.sdk.android.httpdns.HttpDns;
 import com.alibaba.sdk.android.httpdns.HttpDnsService;
 import com.lefu8.flies.api.CommonAPI;
 import com.lefu8.flies.convert.ConvertFactory;
+import com.lefu8.flies.util.LogUtils;
 import com.lefu8.fliesparent.frame.LefuHttpDNS;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;

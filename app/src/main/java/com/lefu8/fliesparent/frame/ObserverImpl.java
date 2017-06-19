@@ -5,6 +5,7 @@ import com.lefu8.flies.response.SimpleObserver;
 import com.lefu8.flies.util.LogUtils;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 请求响应返回公共解析类
@@ -14,6 +15,13 @@ import java.lang.reflect.Type;
 public abstract class ObserverImpl<T extends JSONEntity<?>> extends SimpleObserver<T> {
 
   private Gson gson;
+
+  @Override public void onError(Throwable e) {
+    super.onError(e);
+    if (e instanceof TimeoutException) {
+
+    }
+  }
 
   public ObserverImpl() {
     gson = new Gson();

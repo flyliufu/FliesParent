@@ -19,21 +19,27 @@
       android:id="@+id/btn_request_object"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="请求"
+      android:text="对象请求"
       />
   <Button
       android:id="@+id/btn_request_list"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="请求"
+      android:text="列表请求"
       />
 
   <Button
       android:id="@+id/btn_request_timeout"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="请求"
+      android:text="失败请求"
       />
 
+  <Button
+      android:id="@+id/btn_request_file_upload"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="上传文件请求"
+      />
 
 </LinearLayout>

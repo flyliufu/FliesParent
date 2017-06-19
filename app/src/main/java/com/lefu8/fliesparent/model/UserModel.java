@@ -7,6 +7,8 @@ import com.lefu8.fliesparent.frame.AppModel;
 import com.lefu8.fliesparent.frame.JSONEntity;
 import com.lefu8.fliesparent.frame.ObserverImpl;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author liufu on 2017/6/4.
@@ -31,9 +33,16 @@ public class UserModel extends AppModel {
     doGet("json/object.json", null, observer);
   }
 
-
   public void timeout(ObserverImpl<JSONEntity<UserBean>> observer) {
 
-    doGet("json/timeout.json", null, observer);
+    doPost("json/timeout.json", null, observer);
+  }
+
+  public void fileUpload(String s, Map<String, String> param,
+      ObserverImpl<JSONEntity<String>> fileUploadObserver) {
+    Map<String, String> fileMap = new HashMap<>();
+    fileMap.put("file", s);
+
+    fileUpload("http://172.28.1.41:8080/blog/testUpload", param, fileMap, fileUploadObserver);
   }
 }
