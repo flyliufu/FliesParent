@@ -151,6 +151,7 @@ import rx.schedulers.Schedulers;
    */
   protected Subscription doPostFileDownload(@NonNull String url, @NonNull final String path,
       final String fileName, Map<String, String> params, Observer<File> observer) {
+
     params = getPublicParams(params);
     return getCommonApi().doPostFileDownload(url, getHeaders(), params)
         .flatMap(new Func1<Response<ResponseBody>, Observable<File>>() {
