@@ -2,6 +2,8 @@ package com.lefu8.flies.api;
 
 import java.util.Map;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -9,6 +11,7 @@ import retrofit2.http.GET;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 import rx.Observable;
 
@@ -46,4 +49,27 @@ public interface CommonAPI {
    */
   @POST Observable<String> fileUpload(@Url String path, @HeaderMap Map<String, String> headerMap,
       @Body RequestBody body);
+
+  /**
+   * POST 方式请求文件下载
+   *
+   * @param fileUrl 请求路径
+   * @param headerMap 请求 header
+   * @param params 请求参数
+   * @return 文件结果
+   */
+  @FormUrlEncoded @Streaming @POST Observable<Response<ResponseBody>> doPostFileDownload(
+      @Url String fileUrl, @HeaderMap Map<String, String> headerMap,
+      @FieldMap Map<String, String> params);
+
+  /**
+   * GET 方式请求文件下载
+   *
+   * @param fileUrl 请求路径
+   * @param headerMap 请求 header
+   * @param params 请求参数
+   * @return 文件结果
+   */
+  @Streaming @GET Observable<Response<ResponseBody>> doGetFileDownload(@Url String fileUrl,
+      @HeaderMap Map<String, String> headerMap, @QueryMap Map<String, String> params);
 }
