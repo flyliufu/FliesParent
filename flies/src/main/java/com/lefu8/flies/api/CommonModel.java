@@ -51,13 +51,7 @@ import rx.schedulers.Schedulers;
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
 
-    Subscription subscribe;
-    if (observer != null) {
-      subscribe = observable.subscribe(observer);
-    } else {
-      subscribe = observable.subscribe(DEFAULT);
-    }
-    return subscribe;
+    return observable.subscribe(observer == null ? DEFAULT : observer);
   }
 
   /**
@@ -71,13 +65,7 @@ import rx.schedulers.Schedulers;
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
 
-    Subscription subscribe;
-    if (observer != null) {
-      subscribe = observable.subscribe(observer);
-    } else {
-      subscribe = observable.subscribe(DEFAULT);
-    }
-    return subscribe;
+    return observable.subscribe(observer == null ? DEFAULT : observer);
   }
 
   /**
@@ -96,13 +84,7 @@ import rx.schedulers.Schedulers;
         filesToMultipartBodyParts(fileMap, params, FliesMediaType.IMAGE_PNG))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
-    Subscription subscribe;
-    if (observer != null) {
-      subscribe = observable.subscribe(observer);
-    } else {
-      subscribe = observable.subscribe(DEFAULT);
-    }
-    return subscribe;
+    return observable.subscribe(observer == null ? DEFAULT : observer);
   }
 
   /**
@@ -122,13 +104,7 @@ import rx.schedulers.Schedulers;
         filesToMultipartBodyParts(fileMap, params, mediaType))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
-    Subscription subscribe;
-    if (observer != null) {
-      subscribe = observable.subscribe(observer);
-    } else {
-      subscribe = observable.subscribe(DEFAULT);
-    }
-    return subscribe;
+    return observable.subscribe(observer == null ? DEFAULT : observer);
   }
 
   /**
