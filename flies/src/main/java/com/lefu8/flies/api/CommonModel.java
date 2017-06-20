@@ -9,6 +9,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -42,35 +43,41 @@ import rx.schedulers.Schedulers;
   /**
    * GET 请求
    */
-  protected <T> void doGet(String url, Map<String, String> params, SimpleObserver<T> observer) {
+  protected <T> Subscription doGet(String url, Map<String, String> params,
+      SimpleObserver<T> observer) {
     params = getPublicParams(params);
 
     Observable<String> observable = getCommonApi().doGet(url, getHeaders(), params)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
 
+    Subscription subscribe;
     if (observer != null) {
-      observable.subscribe(observer);
+      subscribe = observable.subscribe(observer);
     } else {
-      observable.subscribe(DEFAULT);
+      subscribe = observable.subscribe(DEFAULT);
     }
+    return subscribe;
   }
 
   /**
    * POST 请求
    */
-  protected <T> void doPost(String url, Map<String, String> params, SimpleObserver<T> observer) {
+  protected <T> Subscription doPost(String url, Map<String, String> params,
+      SimpleObserver<T> observer) {
     params = getPublicParams(params);
 
     Observable<String> observable = getCommonApi().doPost(url, getHeaders(), params)
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
 
+    Subscription subscribe;
     if (observer != null) {
-      observable.subscribe(observer);
+      subscribe = observable.subscribe(observer);
     } else {
-      observable.subscribe(DEFAULT);
+      subscribe = observable.subscribe(DEFAULT);
     }
+    return subscribe;
   }
 
   /**
@@ -81,19 +88,21 @@ import rx.schedulers.Schedulers;
    * @param fileMap 文件列表
    */
 
-  protected <T> void fileUpload(String url, Map<String, String> params, Map<String, String> fileMap,
-      SimpleObserver<T> observer) {
+  protected <T> Subscription fileUpload(String url, Map<String, String> params,
+      Map<String, String> fileMap, SimpleObserver<T> observer) {
     params = getPublicParams(params);
 
     Observable<String> observable = getCommonApi().fileUpload(url, getHeaders(),
         filesToMultipartBodyParts(fileMap, params, FliesMediaType.IMAGE_PNG))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
+    Subscription subscribe;
     if (observer != null) {
-      observable.subscribe(observer);
+      subscribe = observable.subscribe(observer);
     } else {
-      observable.subscribe(DEFAULT);
+      subscribe = observable.subscribe(DEFAULT);
     }
+    return subscribe;
   }
 
   /**
@@ -105,19 +114,21 @@ import rx.schedulers.Schedulers;
    * @param mediaType 上传文件类型
    */
 
-  protected <T> void fileUpload(String url, Map<String, String> params, Map<String, String> fileMap,
-      MediaType mediaType, SimpleObserver<T> observer) {
+  protected <T> Subscription fileUpload(String url, Map<String, String> params,
+      Map<String, String> fileMap, MediaType mediaType, SimpleObserver<T> observer) {
     params = getPublicParams(params);
 
     Observable<String> observable = getCommonApi().fileUpload(url, getHeaders(),
         filesToMultipartBodyParts(fileMap, params, mediaType))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
+    Subscription subscribe;
     if (observer != null) {
-      observable.subscribe(observer);
+      subscribe = observable.subscribe(observer);
     } else {
-      observable.subscribe(DEFAULT);
+      subscribe = observable.subscribe(DEFAULT);
     }
+    return subscribe;
   }
 
   /**
