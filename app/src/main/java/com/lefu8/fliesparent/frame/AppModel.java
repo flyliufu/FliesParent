@@ -16,7 +16,7 @@ public abstract class AppModel extends CommonModel {
 
   {
     // TODO: 2017/6/4  这里存放一些不因程序运行改变的键值对
-    mHeaders.put("Content-Type", "text/json");
+    // mHeaders.put("Content-Type", "text/json");
   }
 
   @Override protected Map<String, String> getPublicParams(Map<String, String> params) {

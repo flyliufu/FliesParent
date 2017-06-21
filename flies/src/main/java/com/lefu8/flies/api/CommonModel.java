@@ -28,16 +28,21 @@ import rx.schedulers.Schedulers;
  */
 @SuppressWarnings("unchecked") public abstract class CommonModel {
 
-  private final SimpleObserver DEFAULT;
+  private final Observer DEFAULT;
 
   public CommonModel(SimpleObserver simpleObserver) {
     this.DEFAULT = simpleObserver;
   }
 
   public CommonModel() {
-    this.DEFAULT = new SimpleObserver() {
-      @Override protected void onParse(Object o) {
-        // this method will never be execute.
+    this.DEFAULT = new Observer() {
+
+      @Override public void onCompleted() {
+        LogUtils.d("CommonModel default onCompleted execute.");
+      }
+
+      @Override public void onError(Throwable e) {
+        LogUtils.d("CommonModel default onError execute :" + e.getMessage());
       }
 
       @Override public void onNext(Object o) {
@@ -50,30 +55,79 @@ import rx.schedulers.Schedulers;
 
   /**
    * GET 请求
+   *
+   * @param url 请求路径
+   * @param params 请求参数
+   * @return 结果观察者对象
+   */
+  protected Observable<String> doGet(String url, Map<String, String> params) {
+
+    params = getPublicParams(params);
+    return getCommonApi().doGet(url, getHeaders(), params)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread());
+  }
+
+  /**
+   * GET 请求
+   *
+   * @param url 请求路径
+   * @param params 请求参数
+   * @param observer 回调方法
+   * @return 订阅事件
    */
   protected <T> Subscription doGet(String url, Map<String, String> params,
       SimpleObserver<T> observer) {
-    params = getPublicParams(params);
 
-    Observable<String> observable = getCommonApi().doGet(url, getHeaders(), params)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread());
-
-    return observable.subscribe(observer == null ? DEFAULT : observer);
+    return doGet(url, params).subscribe(observer == null ? DEFAULT : observer);
   }
 
   /**
    * POST 请求
+   *
+   * @param url 请求路径
+   * @param params 请求参数
+   * @return 结果观察者对象
+   */
+  protected Observable<String> doPost(String url, Map<String, String> params) {
+    params = getPublicParams(params);
+
+    return getCommonApi().doPost(url, getHeaders(), params)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread());
+  }
+
+  /**
+   * POST 请求
+   *
+   * @param url 请求路径
+   * @param params 请求参数
+   * @param observer 回调方法
+   * @return 订阅事件
    */
   protected <T> Subscription doPost(String url, Map<String, String> params,
       SimpleObserver<T> observer) {
-    params = getPublicParams(params);
 
-    Observable<String> observable = getCommonApi().doPost(url, getHeaders(), params)
+    return doPost(url, params).subscribe(observer == null ? DEFAULT : observer);
+  }
+
+  /**
+   * 文件上传
+   *
+   * @param url 上传路径
+   * @param type 上传类型
+   * @param fileMap 文件列表
+   * @param params 请求参数
+   * @return 观察者
+   */
+  protected Observable<String> fileUpload(String url, MediaType type, Map<String, String> fileMap,
+      Map<String, String> params) {
+
+    params = getPublicParams(params);
+    return getCommonApi().fileUpload(url, getHeaders(),
+        filesToMultipartBodyParts(fileMap, params, type))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
-
-    return observable.subscribe(observer == null ? DEFAULT : observer);
   }
 
   /**
@@ -83,16 +137,11 @@ import rx.schedulers.Schedulers;
    * @param params 参数
    * @param fileMap 文件列表
    */
-
   protected <T> Subscription fileUpload(String url, Map<String, String> params,
       Map<String, String> fileMap, SimpleObserver<T> observer) {
-    params = getPublicParams(params);
 
-    Observable<String> observable = getCommonApi().fileUpload(url, getHeaders(),
-        filesToMultipartBodyParts(fileMap, params, FliesMediaType.IMAGE_PNG))
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread());
-    return observable.subscribe(observer == null ? DEFAULT : observer);
+    return fileUpload(url, FliesMediaType.IMAGE_PNG, fileMap, params).subscribe(
+        observer == null ? DEFAULT : observer);
   }
 
   /**
@@ -103,16 +152,33 @@ import rx.schedulers.Schedulers;
    * @param fileMap 文件列表
    * @param mediaType 上传文件类型
    */
-
   protected <T> Subscription fileUpload(String url, Map<String, String> params,
       Map<String, String> fileMap, MediaType mediaType, SimpleObserver<T> observer) {
-    params = getPublicParams(params);
 
-    Observable<String> observable = getCommonApi().fileUpload(url, getHeaders(),
-        filesToMultipartBodyParts(fileMap, params, mediaType))
+    return fileUpload(url, mediaType, fileMap, params).subscribe(
+        observer == null ? DEFAULT : observer);
+  }
+
+  /**
+   * GET 下载文件
+   *
+   * @param url 下载请求网络路径
+   * @param path 下载到本地的路径
+   * @param fileName 本地文件名
+   * @param params 请求参数
+   * @return 文件观察者
+   */
+  protected Observable<File> doGetFileDownload(@NonNull String url, @NonNull final String path,
+      @NonNull final String fileName, Map<String, String> params) {
+    params = getPublicParams(params);
+    return getCommonApi().doGetFileDownload(url, getHeaders(), params)
+        .flatMap(new Func1<Response<ResponseBody>, Observable<File>>() {
+          @Override public Observable<File> call(Response<ResponseBody> response) {
+            return saveToDiskRx(path, fileName, response);
+          }
+        })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());
-    return observable.subscribe(observer == null ? DEFAULT : observer);
   }
 
   /**
@@ -126,17 +192,32 @@ import rx.schedulers.Schedulers;
    * @return 订阅事件
    */
   protected Subscription doGetFileDownload(@NonNull String url, @NonNull final String path,
-      final String fileName, Observer<File> observer, Map<String, String> params) {
+      @NonNull final String fileName, Map<String, String> params, Observer<File> observer) {
+
+    return doGetFileDownload(url, path, fileName, params).subscribe(
+        observer == null ? DEFAULT : observer);
+  }
+
+  /**
+   * GET 下载文件
+   *
+   * @param url 下载请求网络路径
+   * @param path 下载到本地的路径
+   * @param fileName 本地文件名
+   * @param params 请求参数
+   * @return 文件观察者
+   */
+  protected Observable<File> doPostFileDownload(@NonNull String url, @NonNull final String path,
+      @NonNull final String fileName, Map<String, String> params) {
     params = getPublicParams(params);
-    return getCommonApi().doGetFileDownload(url, getHeaders(), params)
+    return getCommonApi().doPostFileDownload(url, getHeaders(), params)
         .flatMap(new Func1<Response<ResponseBody>, Observable<File>>() {
           @Override public Observable<File> call(Response<ResponseBody> response) {
             return saveToDiskRx(path, fileName, response);
           }
         })
         .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(observer);
+        .observeOn(AndroidSchedulers.mainThread());
   }
 
   /**
@@ -152,16 +233,8 @@ import rx.schedulers.Schedulers;
   protected Subscription doPostFileDownload(@NonNull String url, @NonNull final String path,
       final String fileName, Map<String, String> params, Observer<File> observer) {
 
-    params = getPublicParams(params);
-    return getCommonApi().doPostFileDownload(url, getHeaders(), params)
-        .flatMap(new Func1<Response<ResponseBody>, Observable<File>>() {
-          @Override public Observable<File> call(Response<ResponseBody> response) {
-            return saveToDiskRx(path, fileName, response);
-          }
-        })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(observer);
+    return doPostFileDownload(url, path, fileName, params).subscribe(
+        observer == null ? DEFAULT : observer);
   }
 
   /**
@@ -177,8 +250,6 @@ import rx.schedulers.Schedulers;
     return Observable.create(new Observable.OnSubscribe<File>() {
       @Override public void call(Subscriber<? super File> subscriber) {
         try {
-          String header = response.headers().get("Content-Disposition");
-          String filename = header.replace("attachment; filename=", "");
           // 创建下载目录
           File dir = new File(fileDir);
 
@@ -189,7 +260,7 @@ import rx.schedulers.Schedulers;
             }
           }
           //创建下载目录文件
-          File destinationFile = new File(dir, fileName == null ? filename : fileName);
+          File destinationFile = new File(dir, fileName);
 
           BufferedSink bufferedSink = Okio.buffer(Okio.sink(destinationFile));
           bufferedSink.writeAll(response.body().source());

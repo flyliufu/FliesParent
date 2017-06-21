@@ -10,7 +10,7 @@
   <TextView
       android:id="@+id/tv_user_name"
       android:layout_width="wrap_content"
-      android:layout_height="50dp"
+      android:layout_height="wrap_content"
       android:background="#fff"
       android:gravity="center_vertical"
       android:textSize="18sp"
@@ -40,6 +40,12 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="上传文件请求"
+      />
+  <Button
+      android:id="@+id/btn_request_file_download"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="下载文件请求"
       />
 
 </LinearLayout>
